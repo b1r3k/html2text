@@ -79,6 +79,7 @@ class HTML2Text(HTMLParser.HTMLParser):
         self.ignore_tables = config.IGNORE_TABLES  # covered in cli
         self.google_doc = False  # covered in cli
         self.ul_item_mark = '*'  # covered in cli
+        self.ul_zero_indent = False
         self.emphasis_mark = '_'  # covered in cli
         self.strong_mark = '**'
         self.single_line_break = config.SINGLE_LINE_BREAK  # covered in cli
@@ -599,7 +600,8 @@ class HTML2Text(HTMLParser.HTMLParser):
                 if self.google_doc:
                     nest_count = self.google_nest_count(tag_style)
                 else:
-                    nest_count = len(self.list)
+                    indent_adjust = 1 if self.ul_zero_indent else 0
+                    nest_count = len(self.list) - indent_adjust
                 # TODO: line up <ol><li>s > 9 correctly.
                 self.o("  " * nest_count)
                 if li['name'] == "ul":
